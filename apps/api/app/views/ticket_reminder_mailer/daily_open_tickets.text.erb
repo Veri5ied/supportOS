@@ -1,0 +1,10 @@
+Open tickets count: <%= @tickets.count %>
+
+<% @tickets.each do |ticket| %>
+Ticket #<%= ticket.id %>
+Subject: <%= ticket.subject %>
+Status: <%= ticket.status %>
+Customer: <%= ticket.customer.email %>
+Created At: <%= ticket.created_at.iso8601 %>
+
+<% end %>

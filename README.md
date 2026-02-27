@@ -150,3 +150,29 @@ pnpm test
 
 - If `bundle install` fails due Ruby version mismatch, switch Ruby to `3.3.4` and retry.
 - If port `5432` is occupied, update `DATABASE_URL` and `TEST_DATABASE_URL` to the correct port.
+
+## Assessment Artifacts
+
+Database schema and migrations:
+
+- `apps/api/db/schema.rb`
+- `apps/api/db/migrate/*`
+
+GraphQL schema definition:
+
+- `apps/api/app/graphql/schema.graphql`
+
+Regenerate GraphQL schema definition:
+
+```bash
+cd apps/api
+bin/rails runner 'File.write(Rails.root.join("app/graphql/schema.graphql"), ApiSchema.to_definition)'
+```
+
+Backend unit and integration tests:
+
+- `apps/api/test/models/*`
+- `apps/api/test/services/*`
+- `apps/api/test/integration/*`
+- `apps/api/test/jobs/*`
+- `apps/api/test/mailers/*`
