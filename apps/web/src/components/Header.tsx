@@ -57,9 +57,7 @@ export default function Header() {
             <span className="font-medium">Home</span>
           </Link>
 
-          {/* Demo Links Start */}
 
-          {/* Demo Links End */}
         </nav>
       </aside>
     </>

@@ -1,0 +1,10 @@
+
+one:
+  ticket: one
+  user: one
+  body: MyText
+
+two:
+  ticket: two
+  user: two
+  body: MyText
