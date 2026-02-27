@@ -1,0 +1,69 @@
+# OS and editor
+.DS_Store
+.vscode/
+.idea/
+
+# environment files
+.env
+.env.*
+!.env.example
+apps/api/.env
+apps/api/.env.*
+apps/web/.env
+apps/web/.env.*
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# node
+node_modules/
+.pnpm-store/
+apps/web/node_modules/
+apps/web/dist/
+apps/web/.tanstack/
+apps/web/.vinxi/
+apps/web/.output/
+apps/web/.vite/
+apps/web/.turbo/
+
+# ruby and rails
+.bundle/
+vendor/bundle/
+apps/api/.bundle/
+apps/api/vendor/bundle/
+apps/api/log/*
+!apps/api/log/.keep
+apps/api/tmp/*
+!apps/api/tmp/.keep
+!apps/api/tmp/pids/
+!apps/api/tmp/cache/
+!apps/api/tmp/storage/
+apps/api/tmp/pids/*
+!apps/api/tmp/pids/.keep
+apps/api/tmp/cache/*
+apps/api/tmp/storage/*
+!apps/api/tmp/storage/.keep
+apps/api/storage/*
+!apps/api/storage/.keep
+apps/api/public/assets
+apps/api/public/packs
+apps/api/config/master.key
+apps/api/.byebug_history
+
+# local databases
+*.sqlite3
+*.sqlite3-*
+apps/api/db/*.sqlite3
+apps/api/db/*.sqlite3-*
+
+# build and test artifacts
+coverage/
+dist/
+build/
+
+# process and local infra files
+*.pid
+pgdata/
