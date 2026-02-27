@@ -10,7 +10,7 @@ This repository is a polyglot monorepo for a customer support ticketing system.
 
 Install these tools locally:
 
-- PostgreSQL `14+` (or newer)
+- PostgreSQL `18` (recommended)
 - Ruby `3.3.4` (project is pinned to this version in `apps/api/.ruby-version`)
 - Bundler `2.5+`
 - Node.js `20+` (Node `22+` is also fine)
