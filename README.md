@@ -4,7 +4,6 @@ This repository is a polyglot monorepo for a customer support ticketing system.
 
 - `apps/api`: Ruby on Rails API (PostgreSQL + GraphQL)
 - `apps/web`: TanStack Start frontend
-- `packages`: shared package space (reserved for generated/shared assets)
 
 ## Prerequisites
 
@@ -33,7 +32,6 @@ pnpm -v
 ├── apps
 │   ├── api
 │   └── web
-├── packages
 ├── .env.example
 └── README.md
 ```
