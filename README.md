@@ -74,12 +74,18 @@ set +a
 cd apps/api
 bundle install
 bin/rails db:prepare
+bin/rails db:seed
 bin/rails server
 ```
 
 Backend URL:
 
 - `http://localhost:3001`
+
+Seeded test users:
+
+- Agent: `agent1@example.com` / `password123`
+- Customer: `customer1@example.com` / `password123`
 
 ## Frontend Setup (TanStack Start)
 

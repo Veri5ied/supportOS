@@ -1,7 +1,13 @@
 
 class GraphqlController < ApplicationController
 
+  def preflight
+    set_cors_headers
+    head :no_content
+  end
+
   def execute
+    set_cors_headers
     variables = prepare_variables(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
@@ -16,6 +22,13 @@ class GraphqlController < ApplicationController
   end
 
   private
+
+  def set_cors_headers
+    origin = ENV.fetch("FRONTEND_ORIGIN", "http://localhost:3000")
+    response.set_header("Access-Control-Allow-Origin", origin)
+    response.set_header("Access-Control-Allow-Methods", "POST, OPTIONS")
+    response.set_header("Access-Control-Allow-Headers", "Authorization, Content-Type")
+  end
 
   def prepare_variables(variables_param)
     case variables_param
