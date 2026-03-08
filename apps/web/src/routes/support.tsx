@@ -143,8 +143,8 @@ function SupportPortal() {
         <NewTicket
           pending={createTicket.isPending}
           error={createTicket.error?.message || null}
-          onSubmit={(subject, description) => {
-            void createTicket.mutate({ subject, description })
+          onSubmit={(subject, description, file) => {
+            void createTicket.mutate({ subject, description, file })
           }}
         />
       )
@@ -496,10 +496,11 @@ function NewTicket({
 }: {
   pending: boolean
   error: string | null
-  onSubmit: (subject: string, description: string) => void
+  onSubmit: (subject: string, description: string, file: File | null) => void
 }) {
   const [subject, setSubject] = useState('')
   const [description, setDescription] = useState('')
+  const [file, setFile] = useState<File | null>(null)
 
   return (
     <div style={{ padding: '30px 32px', maxWidth: 760 }}>
@@ -527,6 +528,68 @@ function NewTicket({
         placeholder="Describe your issue"
       />
 
+      <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+        <label
+          style={{
+            border: `1px solid ${C.border}`,
+            borderRadius: 9,
+            padding: '8px 12px',
+            background: C.surfaceAlt,
+            color: C.textSub,
+            fontFamily: FONT,
+            fontSize: 12,
+            fontWeight: 700,
+            cursor: 'pointer',
+          }}
+        >
+          Attach File
+          <input
+            type="file"
+            accept="application/pdf,image/png,image/jpeg,image/webp"
+            style={{ display: 'none' }}
+            onChange={(event) => {
+              const nextFile = event.target.files?.[0] || null
+              setFile(nextFile)
+            }}
+          />
+        </label>
+        {file && (
+          <div
+            style={{
+              border: `1px solid ${C.border}`,
+              borderRadius: 9,
+              padding: '7px 10px',
+              background: C.surface,
+              color: C.textSub,
+              fontFamily: FONT,
+              fontSize: 12,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+            }}
+          >
+            <span style={{ maxWidth: 300, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {file.name}
+            </span>
+            <button
+              type="button"
+              onClick={() => setFile(null)}
+              style={{
+                border: 'none',
+                background: 'transparent',
+                color: C.textMuted,
+                cursor: 'pointer',
+                fontFamily: FONT,
+                fontSize: 12,
+                padding: 0,
+              }}
+            >
+              Remove
+            </button>
+          </div>
+        )}
+      </div>
+
       {error && (
         <div
           style={{
@@ -544,7 +607,7 @@ function NewTicket({
       )}
 
       <button
-        onClick={() => onSubmit(subject, description)}
+        onClick={() => onSubmit(subject, description, file)}
         disabled={pending || !subject.trim() || !description.trim()}
         style={{
           marginTop: 14,

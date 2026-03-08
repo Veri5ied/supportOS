@@ -7,6 +7,22 @@
 - Header: `Content-Type: application/json`
 - Auth header (for protected operations): `Authorization: Bearer <TOKEN>`
 
+## Attachment Upload Endpoint
+
+- Method: `POST`
+- URL: `http://localhost:3001/attachments`
+- Header: `Authorization: Bearer <TOKEN>`
+- Body: `multipart/form-data` with `file`
+- Allowed types: `application/pdf`, `image/png`, `image/jpeg`, `image/webp`
+- Max size: `10MB`
+
+Response fields:
+
+- `attachment_token`
+- `attachment.url`
+- `attachment.original_filename`
+- `attachment.content_type`
+
 ## Auth Mutations
 
 ### signUp
@@ -76,12 +92,16 @@ Variables example:
 ### createTicket (customer-only)
 
 ```graphql
-mutation CreateTicket($subject: String!, $description: String!) {
-  createTicket(input: { subject: $subject, description: $description }) {
+mutation CreateTicket($subject: String!, $description: String!, $attachmentToken: String) {
+  createTicket(input: { subject: $subject, description: $description, attachmentToken: $attachmentToken }) {
     id
     subject
     description
     status
+    attachmentUrl
+    attachmentOriginalFilename
+    attachmentContentType
+    attachmentBytes
     customer {
       id
       email
@@ -96,7 +116,8 @@ Variables example:
 ```json
 {
   "subject": "Unable to login",
-  "description": "I keep getting invalid credentials"
+  "description": "I keep getting invalid credentials",
+  "attachmentToken": "<ATTACHMENT_TOKEN_FROM_UPLOAD_ENDPOINT>"
 }
 ```
 
@@ -197,6 +218,10 @@ query {
     description
     status
     closedAt
+    attachmentUrl
+    attachmentOriginalFilename
+    attachmentContentType
+    attachmentBytes
     createdAt
   }
 }
@@ -212,6 +237,10 @@ query {
     description
     status
     closedAt
+    attachmentUrl
+    attachmentOriginalFilename
+    attachmentContentType
+    attachmentBytes
     customer {
       id
       email
@@ -231,6 +260,10 @@ query Ticket($id: ID!) {
     description
     status
     closedAt
+    attachmentUrl
+    attachmentOriginalFilename
+    attachmentContentType
+    attachmentBytes
     comments {
       id
       body
@@ -285,7 +318,15 @@ curl -s http://localhost:3001/graphql \
 curl -s http://localhost:3001/graphql \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <TOKEN>" \
-  -d '{"query":"mutation { createTicket(input:{ subject:\"Unable to login\", description:\"I keep getting invalid credentials\" }) { id subject status } }"}'
+  -d '{"query":"mutation { createTicket(input:{ subject:\"Unable to login\", description:\"I keep getting invalid credentials\", attachmentToken:\"<ATTACHMENT_TOKEN>\" }) { id subject status attachmentUrl } }"}'
+```
+
+### upload attachment (authenticated)
+
+```bash
+curl -s http://localhost:3001/attachments \
+  -H "Authorization: Bearer <TOKEN>" \
+  -F "file=@/absolute/path/to/file.pdf"
 ```
 
 ### addComment (authenticated)
@@ -311,6 +352,7 @@ curl -s http://localhost:3001/graphql \
 - `signUp` and `signIn` return a `token` and `user` object.
 - Use `token` as `Bearer` token for authenticated queries.
 - Ticket status enum values: `OPEN`, `IN_PROGRESS`, `CLOSED`.
+- Attachment upload is ticket-level and not used in comment chat.
 - Role errors return GraphQL errors with messages:
   - `Agent access required`
   - `Customer access required`

@@ -6,6 +6,10 @@ export const AGENT_TICKETS_QUERY = `
       description
       status
       closedAt
+      attachmentUrl
+      attachmentOriginalFilename
+      attachmentContentType
+      attachmentBytes
       createdAt
       updatedAt
       customer {
@@ -28,6 +32,10 @@ export const CUSTOMER_TICKETS_QUERY = `
       description
       status
       closedAt
+      attachmentUrl
+      attachmentOriginalFilename
+      attachmentContentType
+      attachmentBytes
       createdAt
       updatedAt
       customer {
@@ -50,6 +58,10 @@ export const TICKET_QUERY = `
       description
       status
       closedAt
+      attachmentUrl
+      attachmentOriginalFilename
+      attachmentContentType
+      attachmentBytes
       createdAt
       updatedAt
       customer {
@@ -74,13 +86,17 @@ export const TICKET_QUERY = `
 `
 
 export const CREATE_TICKET_MUTATION = `
-  mutation CreateTicket($subject: String!, $description: String!) {
-    createTicket(input: { subject: $subject, description: $description }) {
+  mutation CreateTicket($subject: String!, $description: String!, $attachmentToken: String) {
+    createTicket(input: { subject: $subject, description: $description, attachmentToken: $attachmentToken }) {
       id
       subject
       description
       status
       closedAt
+      attachmentUrl
+      attachmentOriginalFilename
+      attachmentContentType
+      attachmentBytes
       createdAt
       updatedAt
       customer {

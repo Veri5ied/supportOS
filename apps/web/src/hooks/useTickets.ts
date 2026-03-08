@@ -1,4 +1,4 @@
-import { gqlClient } from '../api/client'
+import { gqlClient, uploadAttachment } from '../api/client'
 import {
   AGENT_TICKETS_QUERY,
   CLOSED_TICKETS_CSV_QUERY,
@@ -17,6 +17,10 @@ type TicketRow = {
   description: string
   status: string
   closedAt: string | null
+  attachmentUrl: string | null
+  attachmentOriginalFilename: string | null
+  attachmentContentType: string | null
+  attachmentBytes: number | null
   createdAt: string
   updatedAt: string
   customer: { id: string; email: string; role: string }
@@ -59,7 +63,13 @@ export function useTicket(ticketId: string | null, enabled = true) {
 
 export function useCreateTicket(onSuccess?: () => void) {
   return useMutation(
-    async (payload: { subject: string; description: string }) => {
+    async (payload: { subject: string; description: string; file?: File | null }) => {
+      let attachmentToken: string | null = null
+      if (payload.file) {
+        const upload = await uploadAttachment(payload.file)
+        attachmentToken = upload.attachmentToken
+      }
+
       const data = await gqlClient<{
         createTicket: {
           id: string
@@ -67,11 +77,19 @@ export function useCreateTicket(onSuccess?: () => void) {
           description: string
           status: string
           closedAt: string | null
+          attachmentUrl: string | null
+          attachmentOriginalFilename: string | null
+          attachmentContentType: string | null
+          attachmentBytes: number | null
           createdAt: string
           updatedAt: string
           customer: { id: string; email: string; role: string }
         }
-      }>(CREATE_TICKET_MUTATION, payload)
+      }>(CREATE_TICKET_MUTATION, {
+        subject: payload.subject,
+        description: payload.description,
+        attachmentToken,
+      })
       return normalizeTicketSummary({ ...data.createTicket, comments: [] })
     },
     { onSuccess: () => onSuccess?.() }

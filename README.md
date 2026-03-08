@@ -48,6 +48,9 @@ Connection strings:
 
 - `DATABASE_URL`
 - `TEST_DATABASE_URL`
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_UPLOAD_PRESET`
+- `CLOUDINARY_FOLDER` (optional)
 
 Default values in `.env.example`:
 
@@ -61,6 +64,14 @@ If your local PostgreSQL user has no password, use:
 ```bash
 DATABASE_URL=postgresql://127.0.0.1:5432/supportos_dev
 TEST_DATABASE_URL=postgresql://127.0.0.1:5432/supportos_test
+```
+
+Cloudinary upload configuration (for ticket attachments):
+
+```bash
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_UPLOAD_PRESET=your_unsigned_upload_preset
+CLOUDINARY_FOLDER=supportos
 ```
 
 ## Backend Setup (Rails API)
@@ -86,6 +97,12 @@ Seeded test users:
 
 - Agent: `agent1@example.com` / `password123`
 - Customer: `customer1@example.com` / `password123`
+
+Attachment upload:
+
+- Upload endpoint: `POST /attachments`
+- Ticket creation accepts optional `attachmentToken`
+- Attachments are stored on Cloudinary and linked to tickets (not comment chat)
 
 ## Frontend Setup (TanStack Start)
 

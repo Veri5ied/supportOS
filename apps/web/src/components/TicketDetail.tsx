@@ -105,6 +105,29 @@ export default function TicketDetailView({
           {ticket.description}
         </div>
 
+        {ticket.attachmentUrl && (
+          <div style={{ marginBottom: 12 }}>
+            <a
+              href={ticket.attachmentUrl}
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                color: C.amberLight,
+                fontFamily: FONT,
+                fontSize: 12,
+                textDecoration: 'none',
+                border: `1px solid ${C.border}`,
+                borderRadius: 8,
+                padding: '8px 10px',
+                display: 'inline-block',
+                background: C.surfaceAlt,
+              }}
+            >
+              {ticket.attachmentOriginalFilename || 'View attachment'}
+            </a>
+          </div>
+        )}
+
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', fontFamily: FONT, fontSize: 12 }}>
           <Meta label="Status" value={ticket.status} />
           <Meta label="Customer" value={ticket.customer.email} />

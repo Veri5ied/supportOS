@@ -22,6 +22,10 @@ export interface TicketSummary {
   description: string
   status: TicketStatus
   closedAt: string | null
+  attachmentUrl: string | null
+  attachmentOriginalFilename: string | null
+  attachmentContentType: string | null
+  attachmentBytes: number | null
   createdAt: string
   updatedAt: string
   commentCount: number
@@ -47,6 +51,10 @@ export interface TicketDetail {
   description: string
   status: TicketStatus
   closedAt: string | null
+  attachmentUrl: string | null
+  attachmentOriginalFilename: string | null
+  attachmentContentType: string | null
+  attachmentBytes: number | null
   createdAt: string
   updatedAt: string
   customer: TicketCustomer

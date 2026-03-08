@@ -6,5 +6,10 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
       headers: :any,
       methods: [:post, :options],
       expose: ['Authorization']
+
+    resource '/attachments',
+      headers: :any,
+      methods: [:post, :options],
+      expose: ['Authorization']
   end
 end

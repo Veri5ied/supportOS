@@ -158,6 +158,46 @@ class GraphqlTicketFlowTest < ActionDispatch::IntegrationTest
     assert_includes csv_data, @customer.email
   end
 
+  def test_customer_creates_ticket_with_attachment
+    attachment_token = AttachmentToken.generate(
+      {
+        url: "https://res.cloudinary.com/demo/raw/upload/v1/supportos/manual.pdf",
+        public_id: "supportos/manual",
+        resource_type: "raw",
+        format: "pdf",
+        bytes: 4012,
+        original_filename: "manual.pdf",
+        content_type: "application/pdf"
+      }
+    )
+
+    result = execute_graphql(
+      query: <<~GQL,
+        mutation($subject: String!, $description: String!, $attachmentToken: String) {
+          createTicket(input: { subject: $subject, description: $description, attachmentToken: $attachmentToken }) {
+            id
+            attachmentUrl
+            attachmentOriginalFilename
+            attachmentContentType
+            attachmentBytes
+          }
+        }
+      GQL
+      variables: {
+        subject: "Need docs",
+        description: "Please see attached",
+        attachmentToken: attachment_token
+      },
+      token: @customer_token
+    )
+
+    assert_nil result["errors"]
+    assert_equal "https://res.cloudinary.com/demo/raw/upload/v1/supportos/manual.pdf", result.dig("data", "createTicket", "attachmentUrl")
+    assert_equal "manual.pdf", result.dig("data", "createTicket", "attachmentOriginalFilename")
+    assert_equal "application/pdf", result.dig("data", "createTicket", "attachmentContentType")
+    assert_equal 4012, result.dig("data", "createTicket", "attachmentBytes")
+  end
+
   private
 
   def create_user(role:)

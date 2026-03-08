@@ -46,6 +46,10 @@ export function normalizeTicketSummary(ticket: {
   description: string
   status: string
   closedAt: string | null
+  attachmentUrl: string | null
+  attachmentOriginalFilename: string | null
+  attachmentContentType: string | null
+  attachmentBytes: number | null
   createdAt: string
   updatedAt: string
   customer: { id: string; email: string; role: string }
@@ -57,6 +61,10 @@ export function normalizeTicketSummary(ticket: {
     description: ticket.description,
     status: toStatus(ticket.status),
     closedAt: ticket.closedAt,
+    attachmentUrl: ticket.attachmentUrl,
+    attachmentOriginalFilename: ticket.attachmentOriginalFilename,
+    attachmentContentType: ticket.attachmentContentType,
+    attachmentBytes: ticket.attachmentBytes,
     createdAt: ticket.createdAt,
     updatedAt: ticket.updatedAt,
     customer: {
@@ -96,6 +104,10 @@ export function normalizeTicketDetail(ticket: {
   description: string
   status: string
   closedAt: string | null
+  attachmentUrl: string | null
+  attachmentOriginalFilename: string | null
+  attachmentContentType: string | null
+  attachmentBytes: number | null
   createdAt: string
   updatedAt: string
   customer: { id: string; email: string; role: string }
@@ -114,6 +126,10 @@ export function normalizeTicketDetail(ticket: {
     description: ticket.description,
     status: toStatus(ticket.status),
     closedAt: ticket.closedAt,
+    attachmentUrl: ticket.attachmentUrl,
+    attachmentOriginalFilename: ticket.attachmentOriginalFilename,
+    attachmentContentType: ticket.attachmentContentType,
+    attachmentBytes: ticket.attachmentBytes,
     createdAt: ticket.createdAt,
     updatedAt: ticket.updatedAt,
     customer: {

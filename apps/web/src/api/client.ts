@@ -6,6 +6,7 @@ let authToken: string | null = null
 export const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL?.trim() || 'http://localhost:3001'
 export const GRAPHQL_ENDPOINT = `${API_BASE_URL}/graphql`
+export const ATTACHMENTS_ENDPOINT = `${API_BASE_URL}/attachments`
 
 function readStoredToken() {
   if (typeof window === 'undefined') return null
@@ -62,4 +63,45 @@ export async function gqlClient<T>(
   }
 
   return body.data
+}
+
+export async function uploadAttachment(file: File) {
+  const token = getAuthToken()
+  const formData = new FormData()
+  formData.append('file', file)
+
+  const res = await fetch(ATTACHMENTS_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: formData,
+  })
+
+  const body = (await res.json()) as {
+    attachment_token?: string
+    attachment?: {
+      url: string
+      public_id: string
+      resource_type: string
+      format: string
+      bytes: number
+      original_filename: string
+      content_type: string
+    }
+    error?: string
+  }
+
+  if (!res.ok) {
+    throw new Error(body.error || `HTTP ${res.status}`)
+  }
+
+  if (!body.attachment_token) {
+    throw new Error('Attachment upload failed')
+  }
+
+  return {
+    attachmentToken: body.attachment_token,
+    attachment: body.attachment,
+  }
 }
