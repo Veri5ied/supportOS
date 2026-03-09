@@ -1,13 +1,12 @@
 
 class GraphqlController < ApplicationController
+  before_action :set_cors_headers
 
   def preflight
-    set_cors_headers
     head :no_content
   end
 
   def execute
-    set_cors_headers
     variables = prepare_variables(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
@@ -47,23 +46,6 @@ class GraphqlController < ApplicationController
     else
       raise ArgumentError, "Unexpected parameter: #{variables_param}"
     end
-  end
-
-  def current_user
-    token = bearer_token
-    return nil if token.blank?
-
-    payload = AuthToken.decode(token)
-    User.find_by(id: payload["user_id"])
-  rescue JWT::DecodeError, JWT::ExpiredSignature
-    nil
-  end
-
-  def bearer_token
-    header = request.headers["Authorization"].to_s
-    return nil unless header.start_with?("Bearer ")
-
-    header.split(" ", 2).last
   end
 
   def handle_error_in_development(e)

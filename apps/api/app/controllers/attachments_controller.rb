@@ -7,15 +7,14 @@ class AttachmentsController < ApplicationController
     "image/webp"
   ].freeze
 
+  before_action :set_cors_headers
+  before_action :authenticate_user!, only: :create
+
   def preflight
-    set_cors_headers
     head :no_content
   end
 
   def create
-    set_cors_headers
-    return unless authenticate_user!
-
     file = params[:file]
     unless file.present?
       render json: { error: "File is required" }, status: :unprocessable_content
@@ -59,29 +58,5 @@ class AttachmentsController < ApplicationController
     response.set_header("Access-Control-Allow-Origin", origin)
     response.set_header("Access-Control-Allow-Methods", "POST, OPTIONS")
     response.set_header("Access-Control-Allow-Headers", "Authorization, Content-Type")
-  end
-
-  def authenticate_user!
-    return true if current_user
-
-    render json: { error: "Authentication required" }, status: :unauthorized
-    false
-  end
-
-  def current_user
-    token = bearer_token
-    return nil if token.blank?
-
-    payload = AuthToken.decode(token)
-    User.find_by(id: payload["user_id"])
-  rescue JWT::DecodeError, JWT::ExpiredSignature
-    nil
-  end
-
-  def bearer_token
-    header = request.headers["Authorization"].to_s
-    return nil unless header.start_with?("Bearer ")
-
-    header.split(" ", 2).last
   end
 end
